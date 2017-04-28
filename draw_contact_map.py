@@ -53,12 +53,26 @@ class MainWindow(QMainWindow):
         fig.canvas.draw()
 
     def save(self):
+        def save_restraints(fname):
+            #    14 :35 red 0.2 300000.0
+            contact_map = np.tril(self.matrix, k=-2)
+            w = []
+            X, Y = contact_map.nonzero()
+            if len(X) != 0:
+                for x,y in zip(X,Y):
+                    w.append(":{} :{} red\n".format(x+1, y+1))
+                w[-1] = w[-1][:-1]  # odciecie ostatniego przejscia do nowego wiersza
+            with open(fname, 'w') as restraints:
+                restraints.writelines(w)
+
         dial = QFileDialog(self, "Save file")
         dial.setFileMode(QFileDialog.AnyFile)
-        dial.setNameFilter("numpy array (*.npy)")
+        dial.setNameFilter("restraints (*.rst)")
         if dial.exec_():
             file_path = str(dial.selectedFiles()[0])
-            np.save(file_path, self.matrix)
+            rst_file_path = file_path[:-4] + '.rst'
+            #np.save(file_path, self.matrix)
+            save_restraints(rst_file_path)
 
     def load(self):
         dial = QFileDialog(self, "load file")

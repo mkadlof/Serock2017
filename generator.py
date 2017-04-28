@@ -3,7 +3,8 @@
 import sys
 import argparse
 import numpy as np
-from numpy import pi, sin, cos, sqrt
+from numpy import pi, sin, cos
+from math import radians
 from MyTools.points_io import save_points_as_pdb
 
 __author__ = "Michał Kadlof <m.kadlof@cent.uw.edu.pl"
@@ -14,6 +15,20 @@ def line(n):
     for i in range(n):
         points.append([i, 0, 0])
     return np.array(points)
+
+
+def circle(n, z_stretch=0):
+    points = []
+    angle_increment = 360 / float(n)
+    radius = 1 / (2 * sin(radians(angle_increment) / 2.))  # Odległość co 1
+    z = 0
+    for i in range(n):
+        x = radius * cos(angle_increment * i * pi / 180)
+        y = radius * sin(angle_increment * i * pi / 180)
+        if z_stretch != 0:
+            z += z_stretch/n
+        points.append((x, y, z))
+    return points
 
 
 def spiral_sphere(n, r, c):
@@ -70,6 +85,16 @@ def build(args):
         points = line(args.N)
         save_points_as_pdb(points, args.output)
 
+    elif args.type == "circle":
+        if len(args.params) > 1:
+            sys.exit(error_msg.format(args.type))
+        try:
+            z = args.params[0]
+        except IndexError:
+            z = 0
+        points = circle(args.N, z)
+        save_points_as_pdb(points, args.output)
+
     elif args.type == "spiral_sphere":
         if len(args.params) != 2:
             sys.exit(error_msg.format(args.type))
@@ -90,13 +115,13 @@ def build(args):
             sys.exit(error_msg.format(args.type))
         d = args.params[0]
         points = random_gas(args.N, d)
-        save_points_as_pdb(points, args.output, render_connect=False)
+        save_points_as_pdb(points, args.output, render_connect=False, corect_endings_for_openmm=False)
 
     elif args.type == "random_walk":
         if len(args.params) != 0:
             sys.exit(error_msg.format(args.type))
         points = random_walk(args.N)
-        save_points_as_pdb(points, args.output, render_connect=False)
+        save_points_as_pdb(points, args.output)
 
     else:
         print("Wrong type {}. Please consult {} -h".format(args.type, sys.argv[0]))
@@ -108,6 +133,8 @@ def main():
     Additional params:
     line:
         no extra args
+    circle:
+        k - z-axis streatch (optional)
     spiral_sphere:
         r - radius of sphere (float)
         c - controls number of turns (float)

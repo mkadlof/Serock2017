@@ -60,8 +60,9 @@ def save_points_as_xyz(points, filename, fmt='chimera', **kwargs):
     print("File {} saved...".format(filename))
 
 
-def save_points_as_pdb(points, filename, render_connect=True, verbose=True):
-    """Save points in PDB file format."""
+def save_points_as_pdb(points, filename, render_connect=True, verbose=True, corect_endings_for_openmm=True):
+    """Save points in PDB file format.
+    corect_endings_for_openmm zamienia BEA na BEE dla pierwsego i ostatniego koralika"""
     atoms = ''
     n = len(points)
     for i in range(n):
@@ -71,10 +72,21 @@ def save_points_as_pdb(points, filename, render_connect=True, verbose=True):
             z = points[i][2]
         except IndexError:
             z = 0.0
-        atoms += (
-            '{0:6}{1:>5}  {2:3}{3:}{4:3} {5:}{6:>4}{7:}   {8:>8.3f}{9:>8.3f}{10:>8.3f}{11:6.2f}{12:6.2f}{13:>12}\n'.
-            format(
-                "ATOM", i + 1, 'B', ' ', 'BEA', 'A', i + 1, ' ', max(x, -999), max(y, -999), max(z, -999), 0, 0, 'B'))
+        if not corect_endings_for_openmm:
+            atoms += (
+                '{0:6}{1:>5}  {2:3}{3:}{4:3} {5:}{6:>4}{7:}   {8:>8.3f}{9:>8.3f}{10:>8.3f}{11:6.2f}{12:6.2f}{13:>12}\n'.
+                format(
+                    "ATOM", i + 1, 'B', ' ', 'BEA', 'A', i + 1, ' ', max(x, -999), max(y, -999), max(z, -999), 0, 0, 'B'))
+        else:
+            if i == 0 or i == n-1:
+                atom_type = "BEE"
+            else:
+                atom_type = "BEA"
+            atoms += (
+                '{0:6}{1:>5}  {2:3}{3:}{4:3} {5:}{6:>4}{7:}   {8:>8.3f}{9:>8.3f}{10:>8.3f}{11:6.2f}{12:6.2f}{13:>12}\n'.
+                format(
+                    "ATOM", i + 1, 'B', ' ', atom_type, 'A', i + 1, ' ', max(x, -999), max(y, -999), max(z, -999), 0, 0, 'B'))
+
     connects = ''
     if render_connect:
         if n != 1:

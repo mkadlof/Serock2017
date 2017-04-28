@@ -1,0 +1,33 @@
+
+
+1. Pobierz i zainstaluj środowisko pyenv:
+Otwórz terminal i skopiuj do niego poniższe zaklęcie:
+
+curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
+
+2. uruchom ponownie terminal!
+
+3. zainstaluj anacondę:
+
+pyenv install anaconda3-4.3.0
+
+4. przejdź do katalogu Serock2017
+
+cd ~/Serock2017
+
+5. aktywuj Anakondę domyślne środowisko pythona w katalogu Serock
+
+pyenv local anaconda3-4.3.0
+
+6. Pobierz i zainstaluj pakiet OpenMM
+
+conda install -c omnia openmm
+
+Na pytanie Proceed ([y]/n)?
+odpowiedz y
+
+7. Pobierz nowe materiały na dziś
+
+git pull
+
+

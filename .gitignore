@@ -1,3 +1,9 @@
+*.npy
+*.rst
+*.pdf
+*.pdb
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
