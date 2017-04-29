@@ -5,6 +5,14 @@ Otwórz terminal i skopiuj do niego poniższe zaklęcie:
 
 curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
 
+1.5. Dopisz do pliku ~/.bashrc
+
+poniższe linijki (możesz użyćprogramu gedit)
+
+export PATH="/home/kfnrd/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
 2. uruchom ponownie terminal!
 
 3. zainstaluj anacondę:
