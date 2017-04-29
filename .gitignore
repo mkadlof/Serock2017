@@ -2,6 +2,9 @@
 *.rst
 *.pdf
 *.pdb
+*.csv
+
+
 .idea/
 
 # Byte-compiled / optimized / DLL files
