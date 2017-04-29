@@ -33,9 +33,9 @@ INTEGRATOR_TYPE = 'langevin'                # Alternative: langevin, verlet
 FRICTION_COEFF = 100 / unit.picosecond      # Used only with langevin integrator
 
 # Simulation parameters
-RUN_SIMULATION = False
-N_STEPS   = 100
-TIME_STEP = 30 * unit.femtoseconds
+RUN_SIMULATION = True
+N_STEPS   = 100000
+TIME_STEP = 200 * unit.femtoseconds
 TEMPERATURE = 309.75 * unit.kelvin    # 309.75K = 36.6°C
 RANDOM_SEED = 0                       # 0 to make it random
 
@@ -45,7 +45,7 @@ TRAJECTORY_FILENAME = 'trajectory.pdb'
 
 # State reporting
 N_OF_STATE_READS_REPORTED_TO_SCREEN = 20
-N_OF_STATE_READS_REPORTED_TO_FILE   = 100
+N_OF_STATE_READS_REPORTED_TO_FILE   = 1000
 STATE_FILE_NAME                     = 'state.csv'
 PLOT_DATA                           = True
 PLOT_FILE_NAME                      = 'energy.pdf'
