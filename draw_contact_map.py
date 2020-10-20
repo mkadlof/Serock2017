@@ -1,11 +1,10 @@
 #! /usr/bin/env python3
 
 import numpy as np
-
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib import pyplot
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QInputDialog, QApplication, QPushButton, QWidget, QHBoxLayout, \
     QVBoxLayout
+from matplotlib import pyplot
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 __author__ = "Grzegorz Bokota"
 
@@ -31,7 +30,7 @@ class MainWindow(QMainWindow):
                             tight_layout=True)
         self.figure_canvas = FigureCanvas(fig)
         self.fig_num = fig.number
-        pyplot.imshow(self.matrix)
+        pyplot.imshow(self.matrix, interpolation='none')
 
         self.figure_canvas.mpl_connect('button_press_event', self.draw)
 
@@ -49,7 +48,7 @@ class MainWindow(QMainWindow):
 
     def re_draw(self):
         fig = pyplot.figure(self.fig_num)
-        pyplot.imshow(self.matrix)
+        pyplot.imshow(self.matrix, interpolation='none')
         fig.canvas.draw()
 
     def save(self):
@@ -59,19 +58,20 @@ class MainWindow(QMainWindow):
             w = []
             X, Y = contact_map.nonzero()
             if len(X) != 0:
-                for x,y in zip(X,Y):
-                    w.append(":{} :{} red\n".format(x+1, y+1))
+                for x, y in zip(X, Y):
+                    w.append(":{} :{} red\n".format(x + 1, y + 1))
                 w[-1] = w[-1][:-1]  # odciecie ostatniego przejscia do nowego wiersza
             with open(fname, 'w') as restraints:
                 restraints.writelines(w)
 
         dial = QFileDialog(self, "Save file")
         dial.setFileMode(QFileDialog.AnyFile)
-        dial.setNameFilter("restraints (*.rst)")
+        dial.setAcceptMode(QFileDialog.AcceptSave)
+        #        dial.setNameFilter("restraints (*.rst)")
         if dial.exec_():
             file_path = str(dial.selectedFiles()[0])
             rst_file_path = file_path[:-4] + '.rst'
-            #np.save(file_path, self.matrix)
+            np.save(file_path, self.matrix)
             save_restraints(rst_file_path)
 
     def load(self):
